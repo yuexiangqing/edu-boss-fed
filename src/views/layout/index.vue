@@ -39,7 +39,7 @@ min-width: 980px;
 background-color: #d3bce6;
 }
 .el-header{
-background-color: #b3c0d1;
+background-color: #fff;
 }
 .el-main{
 background-color: #e9eef3;
