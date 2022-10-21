@@ -67,7 +67,26 @@ export default {
       // this.$refs.form.validate(valid => {
       // console.log(valid)
       // this.$store.commit('jia')
-      this.$store.commit('jia', 5)
+      // this.$store.commit('jia', 5)
+
+      // this.$store.commit('jia', {
+      //   count: 5,
+      //   delay: 2000
+      // })
+      // this.$store.commit('jia', {
+      //   count: 2,
+      //   delay: 1000
+      // })
+      // this.$store.commit('jia', {
+      //   count: 1,
+      //   delay: 500
+      // })
+
+      // 这里的参数：第一个是 actions 的名字，执行actions，要用dispatch
+      this.$store.dispatch('jiaHandle', { count: 5, delay: 2000 })
+      this.$store.dispatch('jiaHandle', { count: 2, delay: 1000 })
+      this.$store.dispatch('jiaHandle', { count: 1, delay: 5000 })
+
       try {
         // 1.设置校验成功后的功能（请求）
         await this.$refs.form.validate()
