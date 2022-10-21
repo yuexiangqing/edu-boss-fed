@@ -23,6 +23,7 @@
   <el-form-item>
     <el-button
     type="primary"
+    :loading="isLoginLoading"
     @click="onSubmit"
     >登录</el-button>
   </el-form-item>
@@ -53,7 +54,9 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 18, message: '密码长度为6-18位', trigger: 'blur' }
         ]
-      }
+      },
+      // 用于保存加载状态
+      isLoginLoading: false
     }
   },
   methods: {
@@ -66,6 +69,8 @@ export default {
         await this.$refs.form.validate()
         // console.log('通过了校验')
         // 2.发送请求
+        // 登录成功时
+        this.isLoginLoading = true
         // console.log(qs.stringify(this.form))
         // 通过结构的方式获取数据
         const { data } = await request({
@@ -80,6 +85,8 @@ export default {
           data: qs.stringify(this.form) // 因为里面读取的时候，就是读取 form 里面的值
 
         })
+        // 登录失败时
+        this.isLoginLoading = false
         // 3.响应处理,如果成功就跳转到首页上
         if (data.state === 1) {
           this.$router.push({

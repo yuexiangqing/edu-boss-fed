@@ -4,7 +4,7 @@ import axios from 'axios'
 
 // create 创建了 axios 的实例
 const request = axios.create({
-  timeout: 2000
+  // timeout: 2000
 // baseURL:
 // headers:
 })
