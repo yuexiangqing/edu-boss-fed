@@ -66,6 +66,8 @@ export default {
     async onSubmit () {
       // this.$refs.form.validate(valid => {
       // console.log(valid)
+      // this.$store.commit('jia')
+      this.$store.commit('jia', 5)
       try {
         // 1.设置校验成功后的功能（请求）
         await this.$refs.form.validate()
