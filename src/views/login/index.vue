@@ -31,14 +31,17 @@
 </template>
 
 <script>
+import request from '@/utils/request'
+//  qs 用于数据格式的转换，可以将 请求里面的url 变为 urlencoded 格式：名 = 值 & 名 = 值
+import qs from 'qs'
 export default {
   name: 'LoginIndex',
   data () {
     return {
       // 存储表单数据的对象
       form: {
-        phone: '',
-        password: ''
+        phone: '18201288771',
+        password: '111111'
       },
       // 用于设置校验规则的对象
       rules: {
@@ -59,9 +62,23 @@ export default {
       // this.$refs.form.validate(valid => {
       // console.log(valid)
       try {
-        // 设置校验成功后的功能（请求）
+        // 1.设置校验成功后的功能（请求）
         await this.$refs.form.validate()
-        console.log('通过了校验')
+        // console.log('通过了校验')
+        // 2.发送请求
+        // console.log(qs.stringify(this.form))
+        request({
+          method: 'POST',
+          // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          url: '/front/user/login',
+          // urlencoded 格式：名 = 值 & 名 = 值
+          // data: {
+          //   phone: this.form.phone,
+          //   password: this.form.password
+          // }
+          data: qs.stringify(this.form) // 因为里面读取的时候，就是读取 form 里面的值
+
+        })
       } catch (err) {
         // 设置校验失败后的功能 （提示）
         console.log('没有通过校验')
