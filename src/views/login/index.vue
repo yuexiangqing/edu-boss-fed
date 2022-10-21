@@ -32,9 +32,11 @@
 </template>
 
 <script>
-import request from '@/utils/request'
+// import request from '@/utils/request'
 //  qs 用于数据格式的转换，可以将 请求里面的url 变为 urlencoded 格式：名 = 值 & 名 = 值
-import qs from 'qs'
+// import qs from 'qs'
+// 引入封装的接口功能组件,可以用结构的方式，如果还想加别的，在login后面，用 ， 添加即可
+import { login } from '@/services/user'
 export default {
   name: 'LoginIndex',
   data () {
@@ -73,18 +75,20 @@ export default {
         this.isLoginLoading = true
         // console.log(qs.stringify(this.form))
         // 通过结构的方式获取数据
-        const { data } = await request({
-          method: 'POST',
-          // headers: { 'content-type': 'application/x-www-form-urlencoded' },
-          url: '/front/user/login',
-          // urlencoded 格式：名 = 值 & 名 = 值
-          // data: {
-          //   phone: this.form.phone,
-          //   password: this.form.password
-          // }
-          data: qs.stringify(this.form) // 因为里面读取的时候，就是读取 form 里面的值
+        // const { data } = await request({
+        //   method: 'POST',
+        //   // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        //   url: '/front/user/login',
+        //   // urlencoded 格式：名 = 值 & 名 = 值
+        //   // data: {
+        //   //   phone: this.form.phone,
+        //   //   password: this.form.password
+        //   // }
+        //   data: qs.stringify(this.form) // 因为里面读取的时候，就是读取 form 里面的值
 
-        })
+        // })
+        // 这里的参数，只需要传入请求参数就可以了 this.form
+        const { data } = await login(this.form)
         // 登录失败时
         this.isLoginLoading = false
         // 3.响应处理,如果成功就跳转到首页上
