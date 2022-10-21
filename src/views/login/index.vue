@@ -67,7 +67,8 @@ export default {
         // console.log('通过了校验')
         // 2.发送请求
         // console.log(qs.stringify(this.form))
-        request({
+        // 通过结构的方式获取数据
+        const { data } = await request({
           method: 'POST',
           // headers: { 'content-type': 'application/x-www-form-urlencoded' },
           url: '/front/user/login',
@@ -79,6 +80,16 @@ export default {
           data: qs.stringify(this.form) // 因为里面读取的时候，就是读取 form 里面的值
 
         })
+        // 3.响应处理,如果成功就跳转到首页上
+        if (data.state === 1) {
+          this.$router.push({
+            name: 'home'
+          })
+          // $message是里面的组件，如果要使用，参考element
+          this.$message.success('登录成功')
+        } else {
+          this.$message.error('登录失败')
+        }
       } catch (err) {
         // 设置校验失败后的功能 （提示）
         console.log('没有通过校验')
