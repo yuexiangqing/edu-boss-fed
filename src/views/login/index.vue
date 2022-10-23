@@ -119,6 +119,8 @@ export default {
           })
           // $message是里面的组件，如果要使用，参考element
           this.$message.success('登录成功')
+          // 将用户信息存储到 Vuex 中
+          this.$store.commit('setUser', data.content)
         } else {
           this.$message.error('登录失败')
         }
