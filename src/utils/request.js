@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 // 这里的create 是利用它来创建一个axios实例，而create里面可以传入一个对象，这个对象用来对axios进行配置处理
+import store from '@/store'
 
 // create 创建了 axios 的实例
 const request = axios.create({
@@ -20,6 +21,12 @@ request.interceptors.request.use(function (config) {
 // 判断config.url的前缀，来进行请求 baseurl 的设置
 // eslint-disable-next-line no-undef
   config.baseURL = getBaseURL(config.url)
+  // 统一设置 Token 信息设置
+  const { user } = store.state
+  if (user && user.access_token) {
+    config.headers.Authorization = user.access_token
+  }
+
   return config
 })
 export default request

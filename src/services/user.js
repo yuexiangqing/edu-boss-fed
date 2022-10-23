@@ -1,7 +1,5 @@
 import request from '@/utils/request'
 import qs from 'qs'
-// 引入 vuex 的数据
-import store from '@/store'
 
 // 用户登录接口
 export const login = data => {
@@ -15,9 +13,6 @@ export const login = data => {
 export const getUserInfo = () => {
   return request({
     method: 'GET',
-    url: '/front/user/getInfo',
-    headers: {
-      Authorization: store.state.user.access_token
-    }
+    url: '/front/user/getInfo'
   })
 }
