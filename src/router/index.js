@@ -1,5 +1,8 @@
+/* eslint-disable no-undef */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// 引入 store
+import store from '@/store'
 
 // 引入路由中需要使用的组件功能(@代表的是src目录)
 // import Login from '@/views/login/index.vue'
@@ -18,7 +21,7 @@ import VueRouter from 'vue-router'
 // 固定书写
 Vue.use(VueRouter)
 
-// 路由规则
+// 路由规则（添加需要认证的 requiresAuth 信息）
 const routes = [
   {
     path: '/login',
@@ -28,6 +31,8 @@ const routes = [
   {
     path: '/',
     component: () => import(/* webpackChunkName: 'layout' */'@/views/layout/index'),
+    // 直接给某个路由设置，内部的子路由需要认证（包含当前路由）
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -82,5 +87,19 @@ const routes = [
 const router = new VueRouter({
   routes
 })
-
+// router 的导航守卫功能，页面校验访问权限
+router.beforeEach((to, from, next) => {
+  // 验证 to 路由是否需要进行身份验证
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 验证 Vuex 的 store 中的登录用于信息是否存储
+    if (!store.state.user) {
+    // 未登录,跳转到登录页
+      return next({ name: 'login' })
+    }
+    // 已经登录，允许通过
+    next()
+  } else {
+    next()
+  }
+})
 export default router
