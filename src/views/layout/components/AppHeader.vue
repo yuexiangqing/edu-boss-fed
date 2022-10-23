@@ -14,12 +14,12 @@
           <!-- 注意：如果以后用图片的时候，用在线的图片，写成固定值的话，可以不用v-bind -->
           <el-avatar
           :size="30"
-          src="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
+          :src="userInfo.portrait || 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'"
           ></el-avatar>
         <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>用户信息</el-dropdown-item>
+          <el-dropdown-item>{{userInfo.userName}}</el-dropdown-item>
           <el-dropdown-item divided>退出</el-dropdown-item>
         </el-dropdown-menu>
     </el-dropdown>
@@ -27,8 +27,26 @@
   </template>
 
 <script>
+// 引入用户信息接口功能
+import { getUserInfo } from '@/services/user'
 export default {
-  name: 'AppHeader'
+  name: 'AppHeader',
+  created () {
+    // 加载用户信息
+    this.loadUserInfo()
+  },
+  data () {
+    return {
+      userInfo: {}
+    }
+  },
+  methods: {
+    // 加载用户信息功能
+    async loadUserInfo () {
+      const { data } = await getUserInfo()
+      this.userInfo = data.content
+    }
+  }
 }
 </script>
 
