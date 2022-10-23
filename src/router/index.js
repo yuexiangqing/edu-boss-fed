@@ -89,12 +89,20 @@ const router = new VueRouter({
 })
 // router 的导航守卫功能，页面校验访问权限
 router.beforeEach((to, from, next) => {
+  console.log(to)
   // 验证 to 路由是否需要进行身份验证
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 验证 Vuex 的 store 中的登录用于信息是否存储
     if (!store.state.user) {
     // 未登录,跳转到登录页
-      return next({ name: 'login' })
+      return next({
+        name: 'login',
+        // query 查询字符串参数，值就是 ？后面的信息，使用它最后会被拼接为： 名=值&名=值的形式
+        query: {
+          // 将本次路由的 fullPath 传递给 login 页面
+          redirect: to.fullPath // redirect 重定向
+        }
+      })
     }
     // 已经登录，允许通过
     next()

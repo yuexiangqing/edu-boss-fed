@@ -114,13 +114,16 @@ export default {
         this.isLoginLoading = false
         // 3.响应处理,如果成功就跳转到首页上
         if (data.state === 1) {
-          this.$router.push({
-            name: 'home'
-          })
+          // this.$router.push({
+          //   name: 'home'
+          // })
           // $message是里面的组件，如果要使用，参考element
           this.$message.success('登录成功')
           // 将用户信息存储到 Vuex 中
           this.$store.commit('setUser', data.content)
+          // 根据可能存在的 redirect 数据进行跳转设置
+          // 前面这个 $router 是跳转的，后面这个$route 是当前这个路由
+          this.$router.push(this.$route.query.redirect || '/')
         } else {
           this.$message.error('登录失败')
         }
