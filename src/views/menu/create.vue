@@ -53,7 +53,8 @@
   </template>
 
 <script>
-import { getEditMenuInfo } from '@/services/menu'
+import { getEditMenuInfo, createOrUpdateMenu } from '@/services/menu'
+
 export default {
   name: 'MenuCreate',
   data () {
@@ -64,9 +65,9 @@ export default {
         name: '',
         href: '',
         icon: '',
-        orderNum: 5,
+        orderNum: 0,
         description: '',
-        shown: true
+        shown: false
       },
       // 存储上级菜单数据
       parentMenuList: []
@@ -77,8 +78,15 @@ export default {
     this.loadMenuInfo()
   },
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    async onSubmit () {
+    //  1.表单验证
+
+      // 2.发送请求
+      const { data } = await createOrUpdateMenu(this.form)
+      if (data.code === '000000') {
+        this.$message.success('提交成功')
+        this.$router.push({ name: 'menu' })
+      }
     },
     async loadMenuInfo () {
       // 请求上级菜单数据
