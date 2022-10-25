@@ -63,6 +63,10 @@ export default {
   },
   methods: {
     handleEdit () {
+      // 设置跳转
+      this.$router.push({
+        name: 'menu-edit'
+      })
     },
     handleDelete (rowData) {
       // 删除的确认提示
