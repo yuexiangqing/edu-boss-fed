@@ -3,12 +3,12 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <!-- 使用 Form 组件：行内表单 -->
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="审批人">
-            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+            <el-input v-model="form.user" placeholder="审批人"></el-input>
           </el-form-item>
           <el-form-item label="活动区域">
-            <el-select v-model="formInline.region" placeholder="活动区域">
+            <el-select v-model="form.region" placeholder="活动区域">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -18,7 +18,6 @@
           </el-form-item>
         </el-form>
       </div>
-      <div>
         <!-- 使用 Table 组件 -->
         <el-table
           :data="resources"
@@ -62,7 +61,16 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
+        <!-- 分页组件结构 -->
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="form.current"
+            :page-sizes="[10, 200, 300, 400]"
+            :page-size="10"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="400">
+        </el-pagination>
     </el-card>
   </div>
 
@@ -75,15 +83,29 @@ export default {
   name: 'ResourceList',
   data () {
     return {
-      formInline: {},
+    //   formInline: {},
       // 用于存储资源列表数据
-      resources: []
+      resources: [],
+      form: {
+        // 当前显示的页号
+        current: 1
+      },
+      currentPage1: 5,
+      currentPage2: 5,
+      currentPage3: 5,
+      currentPage4: 4
     }
   },
   created () {
     this.loadResources()
   },
   methods: {
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+    },
     async loadResources () {
       const { data } = await getResourcePages({})
       if (data.code === '000000') {
