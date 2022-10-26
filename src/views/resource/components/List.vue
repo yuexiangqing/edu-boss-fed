@@ -42,6 +42,7 @@
             </el-button>
             <el-button
             type="primary"
+            :disabled="isLoading"
             @click="onSubmit"
             >查询</el-button>
           </el-form-item>
@@ -50,7 +51,8 @@
         <!-- 使用 Table 组件 -->
         <el-table
           :data="resources"
-          style="width: 100%">
+          style="width: 100%"
+          v-loading="isLoading">
           <el-table-column
           type="index"
           label="编号"
@@ -98,7 +100,8 @@
             :page-sizes="[10, 15, 20]"
             :page-size="form.size"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalCount">
+            :total="totalCount"
+            :disabled="isLoading">
         </el-pagination>
     </el-card>
   </div>
@@ -130,7 +133,9 @@ export default {
       // 数据的总数
       totalCount: 0,
       // 存储资源分类信息
-      resourcesCategories: []
+      resourcesCategories: [],
+      // 用于保存加载状态
+      isLoading: false
     }
   },
   created () {
@@ -170,10 +175,14 @@ export default {
       this.loadResources()
     },
     async loadResources () {
+      // 开始加载数据
+      this.isLoading = true
       const { data } = await getResourcePages(this.form)
       if (data.code === '000000') {
         this.resources = data.data.records
         this.totalCount = data.data.total
+        // 取消加载状态
+        this.isLoading = false
       }
     },
     handleEdit () {
