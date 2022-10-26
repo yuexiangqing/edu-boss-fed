@@ -66,10 +66,10 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="form.current"
-            :page-sizes="[10, 200, 300, 400]"
-            :page-size="10"
+            :page-sizes="[10, 15, 20]"
+            :page-size="form.size"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="totalCount">
         </el-pagination>
     </el-card>
   </div>
@@ -88,28 +88,38 @@ export default {
       resources: [],
       form: {
         // 当前显示的页号
-        current: 1
+        current: 1,
+        // 每页显示的数据条数
+        size: 10
       },
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      // 数据的总数
+      totalCount: 0
     }
   },
   created () {
     this.loadResources()
   },
   methods: {
+    // 当每页显示条数变化时触发
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.form.size = val
+      // 由于修改了每页显示的条数，应当将页数还原为默认值 1
+      this.form.current = 1
+      this.loadResources()
     },
+    // 页号改变触发
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.form.current = val
+      this.loadResources()
     },
     async loadResources () {
-      const { data } = await getResourcePages({})
+      const { data } = await getResourcePages({
+        current: this.form.current,
+        size: this.form.size
+      })
       if (data.code === '000000') {
         this.resources = data.data.records
+        this.totalCount = data.data.total
       }
     },
     handleEdit () {
