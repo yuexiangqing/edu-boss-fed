@@ -35,7 +35,9 @@ export default {
     }
   },
   created () {
-    this.loadRole()
+    if (this.isEdit) {
+      this.loadRole()
+    }
   },
   data () {
     return {
