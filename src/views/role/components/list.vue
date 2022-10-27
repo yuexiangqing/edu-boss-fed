@@ -16,7 +16,8 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-button>添加角色</el-button>
+      <!-- 显示对话框 -->
+      <el-button @click="dialogVisible = true">添加角色</el-button>
       <el-table
         :data="roles"
         style="width: 100%"
@@ -65,23 +66,37 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 添加角色的对话框结构 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%">
+        <!-- 将添加与编辑功能单独封装到组件中 -->
+        <create-or-edit></create-or-edit>
+      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script>
+import CreateOrEdit from './CreateOrEdit'
 // 引入请求方法
 import { getRoles, deleteRole } from '@/services/role'
 
 export default {
   name: 'RoleList',
+  components: {
+    CreateOrEdit
+  },
   data () {
     return {
       form: {
         name: ''
       },
       isLoading: false,
-      roles: []
+      roles: [],
+      // 控制对话框显示
+      dialogVisible: true
     }
   },
   created () {
@@ -99,7 +114,7 @@ export default {
     },
     // 删除角色
     handleDelete (role) {
-      this.$confirm(`确认删除角色：${role.name}？`, '删除提示')
+      this.$confirm(`确认删除角色：${role.name}?`, '删除提示')
         .then(async () => {
           await deleteRole(role.id)
           this.$message.success('删除成功')
