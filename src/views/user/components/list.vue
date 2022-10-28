@@ -95,12 +95,12 @@
       :visible.sync="dialogVisible"
       width="50%">
       <!-- 下拉菜单组件位置 -->
-      <el-select v-model="value1" multiple placeholder="请选择">
+      <el-select v-model="roleIdList" multiple placeholder="请选择">
         <el-option
-          v-for="item in options"
+          v-for="item in roles"
           :key="item.value"
-          :label="item.label"
-          :value="item.value">
+          :label="item.name"
+          :value="item.id">
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
@@ -114,6 +114,7 @@
 
 <script>
 import { getUserPages, forbidUser } from '@/services/user'
+import { getAllRoles } from '@/services/role'
 export default {
   name: 'UserList',
   data () {
@@ -131,23 +132,9 @@ export default {
       // 用于控制分配角色对话框是否显示
       dialogVisible: false,
       // 下拉菜单信息
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value1: []
+      roles: [],
+      // 选中选项的ID组成的数组
+      roleIdList: []
     }
   },
   created () {
@@ -183,9 +170,14 @@ export default {
       this.loadUsers()
     },
     // 点击用户的分配角色按钮
-    handleSelectRole () {
+    async handleSelectRole () {
     // 显示分配角色对话框
       this.dialogVisible = true
+      // 请求所有角色列表数据
+      const { data } = await getAllRoles()
+      if (data.code === '000000') {
+        this.roles = data.data
+      }
     }
   }
 }

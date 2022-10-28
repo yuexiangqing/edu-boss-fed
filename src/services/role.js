@@ -33,3 +33,10 @@ export const getRoleById = id => {
     url: `/boss/role/${id}`
   })
 }
+// 获取所有角色
+export const getAllRoles = () => {
+  return request({
+    method: 'GET',
+    url: '/boss/role/all'
+  })
+}
