@@ -49,3 +49,11 @@ export const allocateUserRoles = data => {
     data
   })
 }
+
+// 查询用户角色
+export const getUserRoles = userId => {
+  return request({
+    method: 'GET',
+    url: `/boss/role/user/${userId}`
+  })
+}
