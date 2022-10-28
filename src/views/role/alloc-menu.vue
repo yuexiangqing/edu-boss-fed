@@ -12,7 +12,9 @@
             show-checkbox
             ></el-tree>
             <div style="margin=20px;">
-                <el-button>清空</el-button>
+                <el-button
+                @click="onReset"
+                >清空</el-button>
                 <el-button
                 type="primary"
                 @click="onSave"
@@ -49,6 +51,9 @@ export default {
     }
   },
   methods: {
+    onReset () {
+      this.$refs['menu-tree'].setCheckedKeys([])
+    },
     // 自己封装的用于数据筛选的方法（筛选出被选中菜单项的ID）
     getCheckedKeys (menus) {
       // 遍历数据（将所有存在子节点的 NOde 排除，对子节点列表进行筛选）
