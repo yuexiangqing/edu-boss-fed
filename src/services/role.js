@@ -40,3 +40,12 @@ export const getAllRoles = () => {
     url: '/boss/role/all'
   })
 }
+
+// 给用户分配角色
+export const allocateUserRoles = data => {
+  return request({
+    method: 'POST',
+    url: '/boss/role/allocateUserRoles',
+    data
+  })
+}

@@ -105,7 +105,7 @@
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="handleAllocRole">确 定</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -114,7 +114,7 @@
 
 <script>
 import { getUserPages, forbidUser } from '@/services/user'
-import { getAllRoles } from '@/services/role'
+import { getAllRoles, allocateUserRoles } from '@/services/role'
 export default {
   name: 'UserList',
   data () {
@@ -134,13 +134,27 @@ export default {
       // 下拉菜单信息
       roles: [],
       // 选中选项的ID组成的数组
-      roleIdList: []
+      roleIdList: [],
+      // 当前要进行角色分配的用户 ID
+      currentRoleID: null
     }
   },
   created () {
     this.loadUsers()
   },
   methods: {
+    // 点击后进行分配
+    async handleAllocRole () {
+      // 点击确定，将分配角色信息提交给服务端
+      const { data } = await allocateUserRoles({
+        userId: this.currentRoleID,
+        roleIdList: this.roleIdList
+      })
+      if (data.code === '000000') {
+        this.$message.success('分配角色成功')
+        this.dialogVisible = false
+      }
+    },
     // 加载用户
     async loadUsers () {
       this.isLoading = true
@@ -170,8 +184,9 @@ export default {
       this.loadUsers()
     },
     // 点击用户的分配角色按钮
-    async handleSelectRole () {
-    // 显示分配角色对话框
+    async handleSelectRole (userInfo) {
+      this.currentRoleID = userInfo.id
+      // 显示分配角色对话框
       this.dialogVisible = true
       // 请求所有角色列表数据
       const { data } = await getAllRoles()
