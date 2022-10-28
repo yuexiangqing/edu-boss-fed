@@ -7,6 +7,7 @@
             node-key="id"
             :data="menus"
             :props="defaultProps"
+            :default-checked-keys="checkedKeys"
             default-expand-all
             show-checkbox
             ></el-tree>
@@ -22,7 +23,7 @@
   </template>
 
 <script>
-import { getMenuNodeList, allocateRoleMenus } from '@/services/menu'
+import { getMenuNodeList, allocateRoleMenus, getRoleMenus } from '@/services/menu'
 export default {
   name: 'AllocMenu',
   props: {
@@ -32,7 +33,10 @@ export default {
     }
   },
   created () {
+    // 加载所有的菜单信息（用于展示 tree 结构）
     this.loadMenus()
+    // 加载当前角色已经分配的菜单信息
+    this.loadRoleMenus()
   },
   data () {
     return {
@@ -40,10 +44,35 @@ export default {
       defaultProps: {
         children: 'subMenuList',
         label: 'name'
-      }
+      },
+      checkedKeys: []
     }
   },
   methods: {
+    // 自己封装的用于数据筛选的方法（筛选出被选中菜单项的ID）
+    getCheckedKeys (menus) {
+      // 遍历数据（将所有存在子节点的 NOde 排除，对子节点列表进行筛选）
+      menus.forEach(menu => {
+        if (!menu.selected) {
+          // 未选中，结束
+          return
+        }
+        // 检测是否存在子节点
+        if (menu.subMenuList) {
+          // 对子节点进行选中状态检测，结束
+          return this.getCheckedKeys(menu.subMenuList)
+        }
+        // 说明为选中的叶子节点（不存在子节点），存储ID
+        // this.checkedKeys.push(menu.id)
+        this.checkedKeys = [...this.checkedKeys, menu.id]
+      })
+    },
+    async loadRoleMenus () {
+      const { data } = await getRoleMenus(this.roleId)
+      if (data.code === '000000') {
+        this.getCheckedKeys()
+      }
+    },
     async onSave () {
     // 发送请求，传递角色ID 与选中的菜单项 ID
       const { data } = await allocateRoleMenus({
