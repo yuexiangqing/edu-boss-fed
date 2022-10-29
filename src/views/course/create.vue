@@ -66,8 +66,11 @@
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                :before-upload="beforeAvatarUpload"
+                :http-request="handleUpload"
+                >
+                <!-- img 为预览图片显示位置 -->
+                <img v-if="course.courseListImg" :src="course.courseListImg" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
@@ -165,7 +168,9 @@
   </template>
 
 <script>
-// import { saveOrUpdateCourse } from '@/services/course'
+// import { saveOrUpdateCourse, uploadCourseImage } from '@/services/course'
+import { uploadCourseImage } from '@/services/course'
+
 export default {
   name: 'CourseCreate',
   data () {
@@ -204,10 +209,15 @@ export default {
         discountsTag: '',
         isNew: true,
         isNewDes: '',
+        // 课程封面地址
         courseListImg: '',
+        // 解锁封面地址
         courseImgUrl: '',
+        // 课程排序
         sortNum: 0,
+        // 概述1
         previewFirstField: '',
+        // 概述2
         previewSecondField: '',
         status: 0,
         sales: 0,
@@ -225,6 +235,20 @@ export default {
     }
   },
   methods: {
+    // 图片上传处理函数
+    // option 为上传文件的相关信息
+    // option.file 为要上传的文件信息
+    async handleUpload (option) {
+      // 使用FormData 对象处理
+      const fd = new FormData()
+      fd.append('file', option.file)
+      // 发送上传请求
+      const { data } = await uploadCourseImage(fd)
+      if (data.code === '000000') {
+        // data.data.name 服务端响应的，图片上传成功的线上地址
+        this.course.courseListImg = data.data.name
+      }
+    },
     // 上传图片成功回调
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
