@@ -62,14 +62,69 @@
                 </el-upload>
               </el-form-item>
             </div>
+            <!-- 销售信息 -->
             <div v-show="activeStep === 2">
-                销售信息
+                <el-form-item label="售卖价格">
+                  <el-input>
+                    <template slot="append">元</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="商品原价">
+                  <el-input>
+                    <template slot="append">元</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="销量">
+                  <el-input>
+                    <template slot="append">单</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="活动标签">
+                  <el-input>
+                  </el-input>
+                </el-form-item>
             </div>
+            <!-- 秒杀信息 -->
             <div v-show="activeStep === 3">
-               秒杀信息
+               <el-form-item label="限时秒杀开关" label-width="120px">
+                <el-switch
+                v-model="isSeckill"
+                 active-color="#13ce66"
+                 inactive-color="#ff4949"
+                ></el-switch>
+               </el-form-item>
+               <template v-if="isSeckill">
+                <el-form-item label="开始时间">
+                  <el-date-picker
+                    type="datetime"
+                    placeholder="选择日期时间">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间">
+                  <el-date-picker
+                    type="datetime"
+                    placeholder="选择日期时间">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="秒杀价">
+                  <el-input>
+                    <template slot="append">元</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="库存">
+                  <el-input>
+                    <template slot="append">个</template>
+                  </el-input>
+                </el-form-item>
+               </template>
             </div>
+            <!--  课程详情 -->
             <div v-show="activeStep === 4">
-                课程详情
+               <el-form-item>
+                <el-input type="textarea">
+
+                </el-input>
+               </el-form-item>
                 <el-form-item>
                     <el-button
                     type="primary"
@@ -104,7 +159,9 @@ export default {
         { id: 5, title: '课程详情', icon: 'el-icon-cherry' }
       ],
       // 本地预览图片地址
-      imageUrl: ''
+      imageUrl: '',
+      // 秒杀状态
+      isSeckill: false
     }
   },
   methods: {
