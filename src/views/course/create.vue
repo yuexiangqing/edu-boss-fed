@@ -4,10 +4,11 @@
         <div slot="header">
           <el-steps :active="activeStep" simple>
           <el-step
-          v-for="item in steps"
+          v-for=" (item,i) in steps"
           :key="item.id"
           :title="item.title"
           :icon="item.icon"
+          @click.native="activeStep = i"
           ></el-step>
         </el-steps>
         </div>
@@ -65,4 +66,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-step{
+  cursor: pointer;
+}
+</style>
