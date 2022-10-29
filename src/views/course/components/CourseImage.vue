@@ -5,8 +5,9 @@
       <el-progress
        v-if="isUploading"
       type="circle"
-      :percentage="0"
+      :percentage="percentage"
       :width="178"
+      :status="percentage === 100? 'success' : undefined"
       >
       </el-progress>
       <!-- 上传组件 -->
@@ -18,6 +19,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
           :http-request="handleUpload"
+          :on-progress="handleProgress"
           >
           <!-- img 为预览图片显示位置 -->
           <img v-if="value" :src="value" class="avatar">
@@ -46,10 +48,15 @@ export default {
   data () {
     return {
       // 用于保存上传状态
-      isUploading: false
+      isUploading: false,
+      // 用于保存上传进度百分比
+      percentage: 0
     }
   },
   methods: {
+    handleProgress (event, file) {
+      console.log(event, file)
+    },
     // 图片上传处理函数
     // option 为上传文件的相关信息
     // option.file 为要上传的文件信息
@@ -59,11 +66,15 @@ export default {
       const fd = new FormData()
       fd.append('file', option.file)
       // 发送上传请求
-      const { data } = await uploadCourseImage(fd)
+      const { data } = await uploadCourseImage(fd, event => {
+        this.percentage = Math.floor(event.loaded / event.total * 100)
+      })
       if (data.code === '000000') {
         // data.data.name 服务端响应的，图片上传成功的线上地址
         this.$emit('input', data.data.name)
         this.isUploading = false
+        // 上传成功后，设置进度信息归零，避免下次上传出现回退的效果
+        this.percentage = 0
       }
     },
     // 上传图片成功回调
