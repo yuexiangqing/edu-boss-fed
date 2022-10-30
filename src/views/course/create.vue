@@ -148,11 +148,12 @@
             </div>
             <!--  课程详情 -->
             <div v-show="activeStep === 4">
-               <el-form-item>
+               <el-form-item label="课程详情">
                 <!-- <el-input type="textarea"
                 v-model="course.courseDescriptionMarkDown"
                 ></el-input> -->
-                <div ref="editor"></div>
+                <!-- <div ref="editor"></div> -->
+                <text-editor v-model="course.courseDescriptionMarkDown"></text-editor>
                </el-form-item>
                <el-form-item label="是否上架">
                 <el-switch
@@ -185,12 +186,13 @@
 <script>
 import { saveOrUpdateCourse } from '@/services/course'
 import CourseImage from './components/CourseImage'
-import E from 'wangeditor'
+import TextEditor from '@/components/TextEditor'
 
 export default {
   name: 'CourseCreate',
   components: {
-    CourseImage
+    CourseImage,
+    TextEditor
   },
   data () {
     return {
@@ -264,15 +266,7 @@ export default {
       }
     }
   },
-  mounted () {
-    // 富文本编辑器初始化
-    this.initEditor()
-  },
   methods: {
-    initEditor () {
-      const editor = new E(this.$refs.editor)
-      editor.create()
-    },
     async handleSave () {
       const { data } = await saveOrUpdateCourse(this.course)
       if (data.code === '000000') {
