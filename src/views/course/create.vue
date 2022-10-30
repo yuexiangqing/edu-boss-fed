@@ -72,21 +72,35 @@
             <!-- 销售信息 -->
             <div v-show="activeStep === 2">
                 <el-form-item label="售卖价格">
-                  <el-input>
+                  <el-input
+                  v-model="course.discounts"
+                  type="number"
+                  :min="0"
+                  >
                     <template slot="append">元</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item label="商品原价">
-                  <el-input>
+                  <el-input
+                  v-model="course.price"
+                  type="number"
+                  :min="0"
+                  >
                     <template slot="append">元</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="销量">
+                <el-form-item label="销量"
+                v-model="course.sales"
+                  type="number"
+                  :min="0"
+                >
                   <el-input>
                     <template slot="append">单</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="活动标签">
+                <el-form-item label="活动标签"
+                v-model="course.discountsTag"
+                >
                   <el-input>
                   </el-input>
                 </el-form-item>
@@ -95,31 +109,39 @@
             <div v-show="activeStep === 3">
                <el-form-item label="限时秒杀开关" label-width="120px">
                 <el-switch
-                v-model="isSeckill"
+                v-model="course.activityCourse"
                  active-color="#13ce66"
                  inactive-color="#ff4949"
                 ></el-switch>
                </el-form-item>
-               <template v-if="isSeckill">
+               <template v-if="course.activityCourse">
                 <el-form-item label="开始时间">
                   <el-date-picker
+                  v-model="course.activityCourseDTO.beginTime"
                     type="datetime"
                     placeholder="选择日期时间">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间">
                   <el-date-picker
+                  v-model="course.activityCourseDTO.endTime"
                     type="datetime"
                     placeholder="选择日期时间">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="秒杀价">
-                  <el-input>
+                  <el-input
+                  v-model="course.activityCourseDTO.amount"
+                  >
                     <template slot="append">元</template>
                   </el-input>
                 </el-form-item>
                 <el-form-item label="库存">
-                  <el-input>
+                  <el-input
+                  v-model="course.activityCourseDTO.stock"
+                  type="number"
+                  :min="0"
+                  >
                     <template slot="append">个</template>
                   </el-input>
                 </el-form-item>
@@ -174,7 +196,7 @@ export default {
       // 本地预览图片地址
       imageUrl: '',
       // 秒杀状态
-      isSeckill: false,
+      // isSeckill: false,
       // 添加课程的相关信息
       course: {
         id: 0,
@@ -189,9 +211,12 @@ export default {
           description: ''
         },
         courseDescriptionMarkDown: '',
+        // 商品原价
         price: 0,
+        // 售卖价格
         discounts: 0,
         priceTag: '',
+        // 活动标签
         discountsTag: '',
         isNew: true,
         isNewDes: '',
@@ -207,13 +232,18 @@ export default {
         previewSecondField: '',
         status: 0,
         sales: 0,
-        activityCourse: true,
+        // 参与秒杀活动的课程
+        activityCourse: false,
         activityCourseDTO: {
           id: 0,
           courseId: 0,
+          // 秒杀活动开始时间
           beginTime: '',
+          // 秒杀活动结束时间
           endTime: '',
+          // 秒杀活动价格
           amount: 0,
+          // 秒杀库存
           stock: 0
         },
         autoOnlineTime: ''
