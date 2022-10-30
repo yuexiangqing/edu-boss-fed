@@ -89,19 +89,18 @@
                     <template slot="append">元</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="销量"
-                v-model="course.sales"
+                <el-form-item label="销量">
+                  <el-input
+                  v-model="course.sales"
                   type="number"
                   :min="0"
-                >
-                  <el-input>
+                  >
                     <template slot="append">单</template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="活动标签"
-                v-model="course.discountsTag"
-                >
-                  <el-input>
+                <el-form-item label="活动标签">
+                  <el-input
+                  v-model="course.discountsTag">
                   </el-input>
                 </el-form-item>
             </div>
@@ -150,13 +149,23 @@
             <!--  课程详情 -->
             <div v-show="activeStep === 4">
                <el-form-item>
-                <el-input type="textarea">
-
-                </el-input>
+                <el-input type="textarea"
+                v-model="course.courseDescriptionMarkDown"
+                ></el-input>
+               </el-form-item>
+               <el-form-item label="是否上架">
+                <el-switch
+                v-model="course.status"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                :active-value="1"
+                :inactive-value="0"
+                ></el-switch>
                </el-form-item>
                 <el-form-item>
                     <el-button
                     type="primary"
+                    @click="handleSave"
                     >保存
                     </el-button>
                 </el-form-item>
@@ -173,7 +182,7 @@
   </template>
 
 <script>
-// import { saveOrUpdateCourse, uploadCourseImage } from '@/services/course'
+import { saveOrUpdateCourse } from '@/services/course'
 import CourseImage from './components/CourseImage'
 
 export default {
@@ -198,18 +207,20 @@ export default {
       // 秒杀状态
       // isSeckill: false,
       // 添加课程的相关信息
+      // 将数据中与 ID 相关的数据去除，因为是编辑功能使用的
       course: {
-        id: 0,
+        // id: 0,
         courseName: '',
         brief: '',
         teacherDTO: {
-          id: 0,
-          courseId: 0,
+          // id: 0,
+          // courseId: 0,
           teacherName: '',
           teacherHeadPicUrl: '',
           position: '',
           description: ''
         },
+        // 课程详情内容
         courseDescriptionMarkDown: '',
         // 商品原价
         price: 0,
@@ -230,13 +241,14 @@ export default {
         previewFirstField: '',
         // 概述2
         previewSecondField: '',
+        // 上架状态，默认值 0 代表不上架，1代表上架
         status: 0,
         sales: 0,
         // 参与秒杀活动的课程
         activityCourse: false,
         activityCourseDTO: {
-          id: 0,
-          courseId: 0,
+          // id: 0,
+          // courseId: 0,
           // 秒杀活动开始时间
           beginTime: '',
           // 秒杀活动结束时间
@@ -247,6 +259,17 @@ export default {
           stock: 0
         },
         autoOnlineTime: ''
+      }
+    }
+  },
+  methods: {
+    async handleSave () {
+      const { data } = await saveOrUpdateCourse(this.course)
+      if (data.code === '000000') {
+        this.$message.success('添加课程成功')
+        this.$router.push({
+          name: 'course'
+        })
       }
     }
   }
