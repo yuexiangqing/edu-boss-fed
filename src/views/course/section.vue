@@ -5,7 +5,23 @@
         :data="sections"
         :props="defaultProps"
         draggable
-       ></el-tree>
+       >
+    <div class="inner" slot-scope="{node, data}">
+        <!-- 内容设置 -->
+        <span>{{node.label}}</span>
+        <!-- 后续按钮结构 -->
+        <span v-if="data.sectionName" class="actions">
+        <el-button>编辑</el-button>
+        <el-button>添加课时</el-button>
+        <el-button>状态</el-button>
+        </span>
+        <span v-else class="actions">
+        <el-button>编辑</el-button>
+        <el-button>上传视频</el-button>
+        <el-button>状态</el-button>
+        </span>
+    </div>
+    </el-tree>
     </el-card>
   </div>
 </template>
@@ -48,5 +64,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.inner {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ebeef5;
+}
+::v-deep .el-tree-node__content {
+    height: auto;
+}
 </style>
