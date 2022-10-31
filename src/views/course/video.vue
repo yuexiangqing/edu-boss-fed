@@ -12,7 +12,7 @@
                 <input type="file">
             </el-form-item>
             <el-form-item>
-                <el-button>开始上传</el-button>
+                <el-button type="primary">开始上传</el-button>
                 <el-button
                 @click="$router.push({
                     name: 'course-section',
